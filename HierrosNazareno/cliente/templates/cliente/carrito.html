@@ -1,0 +1,72 @@
+{% extends 'cliente/base.html' %}
+
+{% block title %}Mi Carrito | Hierros Nazareno{% endblock %}
+
+{% block content %}
+<main class="max-w-4xl mx-auto mt-10 bg-white p-6 rounded-lg shadow-md border border-gray-200">
+    <h2 class="text-2xl font-black text-[#1E3A8A] mb-6"><i class="fa-solid fa-cart-shopping"></i> Mi Carrito de Materiales</h2>
+
+    {% if carrito %}
+        <div class="overflow-x-auto">
+            <table class="w-full text-left border-collapse">
+                <thead>
+                    <tr class="border-b-2 border-gray-200 text-sm text-gray-600">
+                        <th class="py-2">Producto</th>
+                        <th class="py-2">Precio Unit.</th>
+                        <th class="py-2">Cantidad</th>
+                        <th class="py-2 text-right">Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for key, item in carrito.items %}
+                    <tr class="border-b border-gray-100">
+                        <td class="py-4 font-semibold text-gray-800">{{ item.nombre }}</td>
+                        <td class="py-4 text-gray-600">$ {{ item.precio }}</td>
+                        
+                        <!-- Columna de Botones + / - -->
+                        <td class="py-4">
+                            <div class="flex items-center gap-2">
+                                <form method="POST" action="{% url 'actualizar_carrito' key %}">
+                                    {% csrf_token %}
+                                    <input type="hidden" name="accion" value="restar">
+                                    <button type="submit" class="bg-gray-200 hover:bg-gray-300 text-gray-800 h-7 w-7 rounded flex items-center justify-center font-black transition">-</button>
+                                </form>
+                                
+                                <span class="font-bold w-6 text-center text-gray-900">{{ item.cantidad }}</span>
+                                
+                                <form method="POST" action="{% url 'actualizar_carrito' key %}">
+                                    {% csrf_token %}
+                                    <input type="hidden" name="accion" value="sumar">
+                                    <button type="submit" class="bg-gray-200 hover:bg-gray-300 text-gray-800 h-7 w-7 rounded flex items-center justify-center font-black transition">+</button>
+                                </form>
+                            </div>
+                        </td>
+                        
+                        <!-- Columna Botón Eliminar -->
+                        <td class="py-4 text-right">
+                            <a href="{% url 'eliminar_del_carrito' key %}" class="text-red-500 hover:text-red-700 transition" title="Eliminar producto">
+                                <i class="fa-solid fa-trash-can text-lg"></i>
+                            </a>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        
+        <div class="mt-6 pt-4 border-t border-gray-200 flex flex-col items-end gap-4">
+            <div class="text-2xl font-black text-gray-900">Total Estimado: $ {{ total }}</div>
+            
+            <a href="{% url 'confirmar_pedido' %}" class="bg-[#16A34A] hover:bg-green-700 text-white font-bold py-3 px-8 rounded-md transition shadow-md flex items-center gap-2">
+                <i class="fa-solid fa-check-double"></i> Confirmar Pedido
+            </a>
+        </div>
+    {% else %}
+        <div class="text-center py-10">
+            <i class="fa-solid fa-cart-arrow-down text-4xl text-gray-300 mb-3"></i>
+            <p class="text-gray-500 font-medium">Tu carrito está vacío.</p>
+            <a href="{% url 'catalogo' %}" class="text-blue-600 font-bold hover:underline mt-4 inline-block">Volver al catálogo</a>
+        </div>
+    {% endif %}
+</main>
+{% endblock %}

@@ -1,0 +1,67 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="es" class="h-full bg-gray-100">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Hierros Nazareno S.R.L. | Corralón Metalúrgico</title>
+  
+  <!-- Tailwind CSS CDN y Configuración -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Inter', 'sans-serif'],
+          },
+          colors: {
+            brand: {
+              navy: '#1E3A8A', 
+              dark: '#0F2356',
+              blue: '#2563EB', 
+              hover: '#1D4ED8',
+              light: '#EFF6FF',
+              graybg: '#F3F4F6',
+              accentGreen: '#16A34A',
+            }
+          }
+        }
+      }
+    }
+  </script>
+
+  <!-- FontAwesome Icons & Google Fonts -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+  
+  <!-- Hoja de estilos externa -->
+  <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+</head>
+<body class="bg-[#F3F4F6] text-gray-800 font-sans antialiased min-h-screen flex flex-col pb-20">
+
+  <!-- Aquí irían los bloques de Django para heredar componentes como el Navbar -->
+  {% block content %}
+  
+  <!-- Top Emergency / Notice Bar -->
+  <div class="bg-blue-950 text-blue-200 text-xs px-4 py-1.5 flex items-center justify-between border-b border-blue-900/60 font-medium">
+    <div class="flex items-center gap-1.5 overflow-hidden text-ellipsis whitespace-nowrap">
+      <span class="inline-block w-2 h-2 rounded-full bg-green-400 animate-pulse"></span>
+      <span>Entregas con <strong>Hidrogrúa en 24/48hs</strong> • Stock real</span>
+    </div>
+    <div class="hidden sm:flex items-center gap-3">
+      <span class="text-gray-300"><i class="fa-solid fa-phone text-xs mr-1"></i> (011) 4697-8800</span>
+    </div>
+  </div>
+
+  <!-- El resto de tu código HTML (Navbar, Main, Aside, Nav inferior) va aquí exactamente como en tu diseño original -->
+  <!-- ... (Se omite el contenido central por brevedad, pero debes pegar aquí el contenido entre <header> y <nav> del archivo original) ... -->
+
+  {% endblock content %}
+
+  <!-- Archivo JavaScript externo -->
+  <script src="{% static 'js/main.js' %}"></script>
+</body>
+</html>

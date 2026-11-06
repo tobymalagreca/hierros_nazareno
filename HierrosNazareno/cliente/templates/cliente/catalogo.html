@@ -1,0 +1,167 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="es" class="h-full bg-gray-100">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Hierros Nazareno S.R.L. | Corralón Metalúrgico</title>
+  
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: { sans: ['Inter', 'sans-serif'] },
+          colors: {
+            brand: { navy: '#1E3A8A', dark: '#0F2356', blue: '#2563EB', hover: '#1D4ED8', light: '#EFF6FF', graybg: '#F3F4F6', accentGreen: '#16A34A' }
+          }
+        }
+      }
+    }
+  </script>
+
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+  
+  <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+</head>
+<body class="bg-[#F3F4F6] text-gray-800 font-sans antialiased min-h-screen flex flex-col pb-20">
+
+  <!-- Top Emergency / Notice Bar -->
+  <div class="bg-blue-950 text-blue-200 text-xs px-4 py-1.5 flex items-center justify-between border-b border-blue-900/60 font-medium">
+    <div class="flex items-center gap-1.5 overflow-hidden text-ellipsis whitespace-nowrap">
+      <span class="inline-block w-2 h-2 rounded-full bg-green-400 animate-pulse"></span>
+      <span>Entregas con <strong>Hidrogrúa en 24/48hs</strong> • Stock real</span>
+    </div>
+    <div class="hidden sm:flex items-center gap-3">
+      <span class="text-gray-300"><i class="fa-solid fa-phone text-xs mr-1"></i> (011) 4697-8800</span>
+    </div>
+  </div>
+
+  <!-- NAVBAR SUPERIOR -->
+  <header class="bg-[#1E3A8A] text-white sticky top-0 z-40 shadow-md">
+    <div class="max-w-7xl mx-auto px-4 py-3">
+      <div class="flex items-center justify-between gap-3">
+        <div class="flex items-center gap-2.5">
+          <button onclick="toggleAdminDrawer()" class="p-2 -ml-1 text-blue-200 hover:text-white rounded-lg hover:bg-blue-800/60 transition focus:outline-none">
+            <i class="fa-solid fa-bars text-xl"></i>
+          </button>
+          <div class="leading-tight">
+            <div class="flex items-center gap-1.5">
+              <span class="bg-blue-600 text-white text-xs px-1.5 py-0.5 rounded font-black tracking-wider uppercase">HN</span>
+              <h1 class="text-base sm:text-xl font-black tracking-tight text-white whitespace-nowrap">HIERROS NAZARENO</h1>
+            </div>
+            <p class="text-[10px] text-blue-200 uppercase tracking-widest font-semibold hidden xs:block">Corralón Metalúrgico S.R.L.</p>
+          </div>
+        </div>
+
+        <div class="flex items-center gap-2 sm:gap-3">
+          
+          <!-- Lógica de Autenticación -->
+          {% if user.is_authenticated %}
+            <span class="hidden md:inline text-xs text-blue-200 font-medium">Hola, {{ user.username }}</span>
+            <form method="POST" action="{% url 'logout' %}" class="inline m-0 p-0 mr-1">
+              {% csrf_token %}
+              <button type="submit" class="text-xs text-red-300 hover:text-white font-medium transition">Salir</button>
+            </form>
+          {% else %}
+            <a href="{% url 'login' %}" class="text-xs text-blue-100 hover:text-white font-medium transition hidden sm:inline">Ingresar</a>
+            <a href="{% url 'registro' %}" class="text-xs bg-green-600 hover:bg-green-500 text-white px-2.5 py-1 rounded transition mr-1">Registrarse</a>
+          {% endif %}
+
+          <a href="{% url 'dashboard_admin' %}" class="hidden sm:flex items-center gap-1.5 px-2.5 py-1 bg-blue-900/70 hover:bg-blue-800 border border-blue-700/60 rounded-md text-xs text-blue-100 font-medium transition">
+    <i class="fa-solid fa-shield-halved text-amber-400"></i>
+    <span>Portal Interno</span>
+</a>
+          
+          <a href="{% url 'ver_carrito' %}" class="relative p-2 bg-blue-700/60 hover:bg-blue-600 text-white rounded-lg transition border border-blue-500/40 flex items-center gap-2 px-3">
+            <i class="fa-solid fa-cart-shopping text-base"></i>
+            <span class="hidden md:inline text-xs font-semibold">Carrito</span>
+            <span class="absolute -top-1.5 -right-1.5 bg-red-600 text-white text-[11px] font-bold h-5 w-5 rounded-full flex items-center justify-center ring-2 ring-[#1E3A8A] shadow-sm">
+              {{ request.session.carrito|length }}
+            </span>
+          </a>
+        </div>
+
+      <!-- Buscador (Conectado a la vista de Django) -->
+      <div class="mt-2.5">
+        <form method="GET" action="{% url 'catalogo' %}" class="relative">
+          <input type="text" name="query" value="{{ query|default:'' }}" placeholder="Buscar por perfil IPN, caños estructurales, chapas trapezoidales..." class="w-full bg-white text-gray-900 placeholder-gray-400 text-sm rounded-lg pl-10 pr-24 py-2.5 focus:outline-none focus:ring-2 focus:ring-blue-400 shadow-sm">
+          <div class="absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-400">
+            <i class="fa-solid fa-magnifying-glass text-sm"></i>
+          </div>
+          <button type="submit" class="absolute right-1.5 top-1/2 -translate-y-1/2 bg-[#2563EB] hover:bg-blue-700 text-white text-xs font-semibold px-3 py-1.5 rounded-md transition">Buscar</button>
+        </form>
+      </div>
+    </div>
+  </header>
+
+  <main class="max-w-7xl mx-auto px-4 py-5 w-full flex-1 flex flex-col gap-6">
+
+    <!-- GRILLA DE CATÁLOGO CON BUCLE DE DJANGO -->
+    <section id="catalogo" class="space-y-4">
+      <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+        <div>
+          <div class="flex items-center gap-2">
+            <h3 class="text-xl font-black text-[#111827] tracking-tight">Catálogo de Productos</h3>
+            <span class="bg-gray-200 text-gray-700 text-xs px-2 py-0.5 rounded-full font-bold">{{ productos.count }} Artículos</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+        {% if hay_resultados %}
+            {% for producto in productos %}
+            <article class="bg-white rounded-lg shadow-sm border border-gray-200/90 overflow-hidden flex flex-col justify-between hover:shadow-md transition group">
+              <div class="p-3.5 space-y-2.5">
+                <div class="flex items-center justify-between">
+                  <span class="inline-flex items-center text-[11px] font-bold text-[#16A34A] bg-green-50 px-2 py-0.5 rounded border border-green-200/70">
+                    <i class="fa-solid fa-check text-[9px] mr-1"></i> Stock Disponible
+                  </span>
+                  <span class="text-[10px] uppercase font-bold text-gray-400 tracking-wider">{{ producto.codigo }}</span>
+                </div>
+                
+                <h4 class="text-sm font-bold text-gray-900 line-clamp-2 leading-snug min-h-[2.5rem] mt-2">
+                  {{ producto.nombre }}
+                </h4>
+
+                <div class="pt-1 border-t border-gray-100 flex items-baseline justify-between">
+                  <div>
+                    <span class="text-xs text-gray-500 font-medium">Precio unitario:</span>
+                    <div class="text-2xl font-black text-[#111827] tracking-tight">
+                      $ {{ producto.precio }}
+                    </div>
+                  </div>
+                  <span class="text-[11px] text-gray-500 font-medium">{{ producto.peso_kg }} kg/u</span>
+                </div>
+              </div>
+
+              <div class="p-3.5 pt-0 bg-white">
+                <form method="POST" action="{% url 'agregar_carrito' producto.id %}" class="flex gap-2">
+                  {% csrf_token %}
+                  <!-- Selector de cantidad -->
+                  <input type="number" name="cantidad" value="1" min="1" class="w-16 border border-gray-300 rounded-md text-center text-sm font-semibold focus:ring-blue-500 focus:border-blue-500">
+                  
+                  <!-- Botón agregar -->
+                  <button type="submit" class="w-full bg-[#2563EB] hover:bg-[#1D4ED8] text-white font-bold text-xs py-2.5 px-3 rounded-md transition shadow-sm flex items-center justify-center gap-1.5">
+                    <i class="fa-solid fa-cart-plus text-sm"></i> Agregar
+                  </button>
+                </form>
+              </div>
+            </article>
+            {% endfor %}
+        {% else %}
+            <div class="col-span-full text-center py-10">
+                <p class="text-gray-500 font-medium">No se encontraron productos que coincidan con tu búsqueda.</p>
+            </div>
+        {% endif %}
+      </div>
+    </section>
+
+  </main>
+
+  <script src="{% static 'js/main.js' %}"></script>
+</body>
+</html>
